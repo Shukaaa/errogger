@@ -16,4 +16,4 @@ export const DEFAULT_IGNORE_DIRS = new Set([
 ]);
 
 export const DEFAULT_MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
-export const ERROGGER_CONFIG_FILE = "errogger.config.js";
+export const SWERR_CONFIG_FILE = "swerr.config.js";

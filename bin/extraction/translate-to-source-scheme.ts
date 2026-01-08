@@ -1,14 +1,14 @@
 import {ScanResult} from "./types/scan.js";
-import {ErroggerScheme} from "./types/errogger-scheme.d.js";
+import {SwerrScheme} from "./types/swerr-scheme.d.js";
 import {JsdocBlock} from "./types/jsdoc.js";
 import path from "path";
 import {LogUtils} from "../core/utils/log.utils.js";
-import {ERROGGER_CONFIG} from "../errogger.js";
+import {SwerrConfig} from "../core/interfaces/swerr-config.js";
 
-export function translateToSourceScheme(scanResult: ScanResult): ErroggerScheme {
-    const name = ERROGGER_CONFIG?.meta.projectName || "Generated Errogger Scheme";
-    const description = ERROGGER_CONFIG?.meta.description ||`Errogger documentation generated from scanning ${scanResult.scannedFiles} file(s) with ${scanResult.blocks.length} error block(s).`;
-    const version = ERROGGER_CONFIG?.meta.version || "1.0.0";
+export function translateToSourceScheme(scanResult: ScanResult, config: SwerrConfig | null): SwerrScheme {
+    const name = config?.sourceFile.meta.projectName || "Generated swerr Scheme";
+    const description = config?.sourceFile.meta.description ||`swerr documentation generated from scanning ${scanResult.scannedFiles} file(s) with ${scanResult.blocks.length} error block(s).`;
+    const version = config?.sourceFile.meta.version || "1.0.0";
     const errors = scanResult.blocks.map(block => {
         if (!block.tags.find((t:any) => t.name === "error")) {
             LogUtils.debug(`Skipping JSDocs block without @error tag in file: ${block.filePath}`);

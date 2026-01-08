@@ -1,10 +1,10 @@
 {
-  "name": "errogger",
+  "name": "swerr",
   "version": "0.0.1",
-  "description": "Swagger but for... errors! Document your errors based on JSDocs comments.",
+  "description": "Swagger but for... errors! Automatically document your errors based on JSDocs comments.",
   "type": "module",
   "bin": {
-    "errogger": "./dist/errogger.js"
+    "swerr": "./dist/swerr.js"
   },
   "scripts": {
     "build": "tsc",

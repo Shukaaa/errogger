@@ -20,7 +20,7 @@ export class LogUtils {
     private static tick = 0;
 
     static get prefix() {
-        const text = "Errogger ❯❯❯❯";
+        const text = "swerr ❯❯❯❯";
         let colored = '';
         const len = text.length;
 
