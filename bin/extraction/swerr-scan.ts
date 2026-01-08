@@ -3,7 +3,7 @@ import * as path from "node:path";
 import {JsdocBlock, JsdocTag} from "./types/jsdoc.js";
 import {ScanOptions, ScanResult} from "./types/scan.js";
 import {DEFAULT_IGNORE_DIRS, DEFAULT_MAX_FILE_SIZE} from "../config.js";
-import {LogUtils} from "../core/utils/log.utils.js";
+import {LogUtils} from "@swerr/core";
 
 function isProbablyTextFileByExt(filePath: string, exts?: string[]): boolean {
     exts = exts?.map(e => e.toLowerCase());
@@ -107,7 +107,7 @@ type ParsedBlock = { description: string; tags: JsdocTag[] };
 function parseNormalizedJsdocLines(lines: string[]): ParsedBlock {
     const descLines: string[] = [];
     const tags: JsdocTag[] = [];
-
+    
     let inTags = false;
     let currentTag: JsdocTag | null = null;
 

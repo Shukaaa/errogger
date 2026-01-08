@@ -1,8 +1,10 @@
+import {markdownConverter} from "@swerr/converter"
+
 export default {
     sourceFile: {
         inputDir: "./src/exceptions",
         meta: {
-            projectName: "Muffin API - Error Documentation",
+            projectName: "Muffin API",
             description: "The API description",
             version: "1.0.5",
         },
@@ -19,6 +21,11 @@ export default {
         }
     },
     converter: [
-
+        {
+            factory: markdownConverter,
+            config: {
+                outputPath: "./docs",
+            }
+        }
     ]
 }

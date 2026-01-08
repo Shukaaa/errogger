@@ -3,7 +3,7 @@ import {Command} from "commander";
 import {readFileSync} from "node:fs";
 import path from "path";
 import {fileURLToPath} from "node:url";
-import {runCommand} from "./core/commands/run.command.js";
+import {runCommand} from "./commands/run.command.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,7 +17,6 @@ cli
 		.name("swerr")
 		.description("Create documentation from your errors.")
 		.version(packageJson.version);
-
 
 const commandModules = [
 	runCommand

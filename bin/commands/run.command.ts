@@ -1,14 +1,12 @@
-import {SwerrCommand} from "../interfaces/swerr-command.js";
+import {SwerrCommand} from "./interfaces/swerr-command.js";
 import path from "path";
 import * as fs from "node:fs";
-import {scanJsdocs} from "../../extraction/swerr-scan.js";
-import {LogUtils} from "../utils/log.utils.js";
-import {translateToSourceScheme} from "../../extraction/translate-to-source-scheme.js";
-import {SwerrConfig} from "../interfaces/swerr-config.js";
-import {SWERR_CONFIG_FILE} from "../../config.js";
+import {scanJsdocs} from "../extraction/swerr-scan.js";
+import {translateToSourceScheme} from "../extraction/translate-to-source-scheme.js";
+import {SWERR_CONFIG_FILE} from "../config.js";
 import {existsSync} from "node:fs";
 import {pathToFileURL} from "node:url";
-import {SwerrScheme} from "../../extraction/types/swerr-scheme.js";
+import {LogUtils, SwerrConfig, SwerrScheme} from "@swerr/core";
 
 export const runCommand: SwerrCommand<[string, string]> = {
     command: "run [configPath]",
@@ -45,6 +43,7 @@ export const runCommand: SwerrCommand<[string, string]> = {
             const scheme = translateToSourceScheme(result, swerrConfig)
             LogUtils.info(`Translated scan result to swerr Scheme with ${scheme.errors.length} error(s).`);
             await saveSourceScheme(swerrConfig!, absoluteOutputDir, scheme);
+            await runConverter(swerrConfig!, scheme);
         }).catch(err => {
             LogUtils.error(`Error during scanning: ${err}`);
         })
@@ -90,5 +89,11 @@ async function saveSourceScheme(config: SwerrConfig, absoluteOutputDir: string, 
     } catch (err) {
         console.error(`Failed to write documentation to "${outputFilePath}":`, err);
         process.exit(1);
+    }
+}
+
+async function runConverter(config: SwerrConfig, scheme: SwerrScheme) {
+    for (const converter of config.converter) {
+        await converter.factory(converter.config, scheme);
     }
 }
