@@ -1,3 +1,5 @@
+import {SwerrConfig} from "../../core/interfaces/swerr-config.js";
+
 export type ScanResult = {
     rootDir: string;
     blocks: JsdocBlock[];
@@ -5,7 +7,4 @@ export type ScanResult = {
     skippedFiles: number;
 };
 
-export type ScanOptions = {
-    ignoreDirs?: string[];
-    whitelistExtensions?: string[];
-}
+export type ScanOptions = SwerrConfig["sourceFile"]["options"]

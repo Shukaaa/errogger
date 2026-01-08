@@ -1,15 +1,17 @@
 export default {
     sourceFile: {
+        inputDir: "./src/exceptions",
         meta: {
             projectName: "Muffin API - Error Documentation",
             description: "The API description",
             version: "1.0.5",
         },
-        paths: {
-            inputDir: "./src/exceptions",
+        export: {
+            saveToFile: true,
+            fileName: "swerr-source.json",
             outputDir: "./docs",
         },
-        generatorOptions: {
+        options: {
             ignoreDirs: [],
             whitelistExtensions: [
                 ".js"

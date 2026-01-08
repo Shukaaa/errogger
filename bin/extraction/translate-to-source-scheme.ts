@@ -6,9 +6,9 @@ import {LogUtils} from "../core/utils/log.utils.js";
 import {SwerrConfig} from "../core/interfaces/swerr-config.js";
 
 export function translateToSourceScheme(scanResult: ScanResult, config: SwerrConfig | null): SwerrScheme {
-    const name = config?.sourceFile.meta.projectName || "Generated swerr Scheme";
-    const description = config?.sourceFile.meta.description ||`swerr documentation generated from scanning ${scanResult.scannedFiles} file(s) with ${scanResult.blocks.length} error block(s).`;
-    const version = config?.sourceFile.meta.version || "1.0.0";
+    const name = config?.sourceFile?.meta?.projectName || "Generated swerr Scheme";
+    const description = config?.sourceFile?.meta?.description ||`swerr documentation generated from scanning ${scanResult.scannedFiles} file(s) with ${scanResult.blocks.length} error block(s).`;
+    const version = config?.sourceFile?.meta?.version || "1.0.0";
     const errors = scanResult.blocks.map(block => {
         if (!block.tags.find((t:any) => t.name === "error")) {
             LogUtils.debug(`Skipping JSDocs block without @error tag in file: ${block.filePath}`);

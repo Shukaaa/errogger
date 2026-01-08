@@ -13,7 +13,7 @@ function isProbablyTextFileByExt(filePath: string, exts?: string[]): boolean {
 }
 
 async function* walkDir(root: string, opts: ScanOptions): AsyncGenerator<string> {
-    const ignoreDirs = [...DEFAULT_IGNORE_DIRS, ...(opts.ignoreDirs || [])].reduce((set, dir) => set.add(dir), new Set<string>());
+    const ignoreDirs = [...DEFAULT_IGNORE_DIRS, ...(opts?.ignoreDirs || [])].reduce((set, dir) => set.add(dir), new Set<string>());
 
     const stack: string[] = [root];
     while (stack.length) {
@@ -168,7 +168,7 @@ function parseNormalizedJsdocLines(lines: string[]): ParsedBlock {
 }
 
 async function readTextFileIfEligible(filePath: string, opts: ScanOptions): Promise<string | null> {
-    if (!isProbablyTextFileByExt(filePath, opts.whitelistExtensions)) return null;
+    if (!isProbablyTextFileByExt(filePath, opts?.whitelistExtensions)) return null;
 
     let stat;
     try {
@@ -186,7 +186,7 @@ async function readTextFileIfEligible(filePath: string, opts: ScanOptions): Prom
     }
 }
 
-export async function scanJsdocs(rootDir: string, options: ScanOptions = {}): Promise<ScanResult> {
+export async function scanJsdocs(rootDir: string, options: ScanOptions): Promise<ScanResult> {
     const blocks: JsdocBlock[] = [];
     let scannedFiles = 0;
     let skippedFiles = 0;

@@ -8,14 +8,16 @@ import {SwerrConfig} from "../interfaces/swerr-config.js";
 import {SWERR_CONFIG_FILE} from "../../config.js";
 import {existsSync} from "node:fs";
 import {pathToFileURL} from "node:url";
+import {SwerrScheme} from "../../extraction/types/swerr-scheme.js";
 
 export const runCommand: SwerrCommand<[string, string]> = {
     command: "run [configPath]",
     description: "Create swerr documentation based on the config file.",
     action: async (configPath: string | undefined) => {
         const swerrConfig = await config(configPath);
-        const sourceDir = swerrConfig?.sourceFile.paths.inputDir || null
-        const outputDir = swerrConfig?.sourceFile.paths.outputDir || null
+        const sourceDir = swerrConfig?.sourceFile?.inputDir || null
+        const outputDir = swerrConfig?.sourceFile?.export?.outputDir || null
+        LogUtils.success("Swerr Configuration loaded.");
 
         if (!sourceDir || !outputDir) {
             LogUtils.error("Source and output directories must be specified either via configuration file.");
@@ -38,19 +40,11 @@ export const runCommand: SwerrCommand<[string, string]> = {
             process.exit(1);
         }
 
-        scanJsdocs(absoluteSourceDir).then(async result => {
-            LogUtils.success(`Scanned ${result.blocks.length} JSDocs block(s):`);
+        scanJsdocs(absoluteSourceDir, swerrConfig?.sourceFile.options || {}).then(async result => {
+            LogUtils.info(`Scanned ${result.blocks.length} JSDocs block(s) from ${result.scannedFiles} file(s).`);
             const scheme = translateToSourceScheme(result, swerrConfig)
             LogUtils.info(`Translated scan result to swerr Scheme with ${scheme.errors.length} error(s).`);
-            const outputFilePath = path.join(absoluteOutputDir, "swerr-docs.json");
-            const docContent = JSON.stringify(scheme, null, 2);
-            try {
-                await fs.promises.writeFile(outputFilePath, docContent, "utf8");
-                LogUtils.success(`swerr Source File written to "${outputFilePath}"`);
-            } catch (err) {
-                console.error(`Failed to write documentation to "${outputFilePath}":`, err);
-                process.exit(1);
-            }
+            await saveSourceScheme(swerrConfig!, absoluteOutputDir, scheme);
         }).catch(err => {
             LogUtils.error(`Error during scanning: ${err}`);
         })
@@ -81,6 +75,20 @@ async function config(configPath: string | undefined): Promise<SwerrConfig | nul
         return null;
     } catch (err) {
         LogUtils.error(`Error loading configuration: ${err}`);
+        process.exit(1);
+    }
+}
+
+async function saveSourceScheme(config: SwerrConfig, absoluteOutputDir: string, scheme: SwerrScheme) {
+    if (!config?.sourceFile?.export?.saveToFile) return
+    const fileName = config?.sourceFile?.export?.fileName || "swerr-docs.json";
+    const outputFilePath = path.join(absoluteOutputDir, fileName);
+    const docContent = JSON.stringify(scheme, null, 2);
+    try {
+        await fs.promises.writeFile(outputFilePath, docContent, "utf8");
+        LogUtils.success(`Swerr Source File written to ${outputFilePath}`);
+    } catch (err) {
+        console.error(`Failed to write documentation to "${outputFilePath}":`, err);
         process.exit(1);
     }
 }

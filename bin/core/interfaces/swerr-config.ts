@@ -1,20 +1,22 @@
 export interface SwerrConfig {
     sourceFile: {
-        meta: {
-            projectName: string | null;
-            version: string | null;
-            description: string | null;
+        inputDir?: string;
+        meta?: {
+            projectName?: string;
+            version?: string;
+            description?: string;
         };
-        paths: {
-            inputDir: string | null;
-            outputDir: string | null;
+        export?: {
+            saveToFile?: boolean;
+            fileName?: string;
+            outputDir?: string;
         };
-        options: {
-            ignoreDirs: string[] | null;
-            whitelistExtensions: string[] | null;
+        options?: {
+            ignoreDirs?: string[];
+            whitelistExtensions?: string[];
         }
     },
-    converter: ConverterFn<any>[] | null
+    converter: ConverterFn<any>[]
 }
 
 export type ConverterFn<CFG> = (args: CFG) => void;
